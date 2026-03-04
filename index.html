@@ -9,7 +9,7 @@
 
   body {
     margin: 0;
-    padding: 0;
+    padding: 16px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background: #ffffff;
   }
@@ -17,7 +17,7 @@
   .widget {
     background: #ffffff;
     border-radius: 16px;
-    padding: 32px 28px 28px;
+    padding: 28px 24px 24px;
     max-width: 560px;
     margin: 0 auto;
     border: 1.5px solid #e4ede9;
@@ -25,7 +25,7 @@
 
   .widget-header {
     text-align: center;
-    margin-bottom: 24px;
+    margin-bottom: 22px;
   }
 
   .widget-eyebrow {
@@ -38,7 +38,7 @@
   }
 
   .widget-title {
-    font-size: 22px;
+    font-size: 21px;
     font-weight: 700;
     color: #1B3A2F;
     line-height: 1.3;
@@ -52,7 +52,7 @@
   }
 
   .question-label {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: #1B3A2F;
     margin-bottom: 10px;
@@ -74,9 +74,10 @@
     padding: 14px 12px;
     cursor: pointer;
     text-align: center;
-    transition: all 0.18s ease;
+    transition: border-color 0.15s ease, background 0.15s ease;
     outline: none;
     -webkit-tap-highlight-color: transparent;
+    width: 100%;
   }
 
   .option-btn:hover {
@@ -89,12 +90,11 @@
     background: #1B3A2F;
   }
 
-  .option-btn.selected .option-emoji { filter: none; }
   .option-btn.selected .option-text { color: #ffffff; }
   .option-btn.selected .option-sub  { color: #a8c5b5; }
 
   .option-emoji {
-    font-size: 24px;
+    font-size: 22px;
     display: block;
     margin-bottom: 6px;
   }
@@ -123,28 +123,24 @@
   .result-card {
     background: #1B3A2F;
     border-radius: 14px;
-    padding: 22px 20px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    pointer-events: none;
-    min-height: 0;
-    max-height: 0;
+    padding: 0;
     overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.35s ease, padding 0.35s ease;
   }
 
   .result-card.visible {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-    max-height: 400px;
+    max-height: 500px;
+    padding: 22px 20px 20px;
   }
 
   .result-top {
     display: flex;
-    align-items: center;
-    gap: 14px;
+    align-items: flex-start;
+    justify-content: space-between;
     margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .result-badge {
@@ -157,19 +153,21 @@
     padding: 4px 10px;
     border-radius: 20px;
     white-space: nowrap;
+    margin-top: 4px;
   }
 
   .result-ratio {
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 800;
     color: #ffffff;
+    line-height: 1.1;
   }
 
   .result-mg {
     font-size: 13px;
     color: #7ED4A8;
     font-weight: 600;
-    margin-top: 1px;
+    margin-top: 3px;
   }
 
   .result-desc {
@@ -183,6 +181,7 @@
     display: flex;
     flex-direction: column;
     gap: 7px;
+    margin-bottom: 14px;
   }
 
   .tip-row {
@@ -197,16 +196,15 @@
   .tip-dot {
     width: 6px;
     height: 6px;
+    min-width: 6px;
     background: #4CAF7D;
     border-radius: 50%;
-    flex-shrink: 0;
     margin-top: 5px;
   }
 
   .reset-btn {
     display: block;
     width: 100%;
-    margin-top: 14px;
     background: transparent;
     border: 1.5px solid #2D5A45;
     border-radius: 10px;
@@ -215,7 +213,7 @@
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.18s ease;
+    transition: background 0.15s ease, border-color 0.15s ease;
   }
 
   .reset-btn:hover {
@@ -232,10 +230,11 @@
   }
 
   @media (max-width: 400px) {
-    .widget { padding: 24px 16px 20px; }
-    .widget-title { font-size: 19px; }
-    .options-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .result-ratio { font-size: 22px; }
+    body { padding: 8px; }
+    .widget { padding: 20px 14px 18px; }
+    .widget-title { font-size: 18px; }
+    .options-grid { gap: 8px; }
+    .result-ratio { font-size: 20px; }
   }
 </style>
 </head>
@@ -251,22 +250,22 @@
 
   <div class="question-label">What are you making?</div>
   <div class="options-grid" id="useOptions">
-    <button class="option-btn" data-use="everyday" onclick="selectOption('use', this)">
+    <button class="option-btn" data-use="everyday">
       <span class="option-emoji">🥄</span>
       <span class="option-text">Everyday Cooking</span>
       <span class="option-sub">Sauces, smoothies, toast</span>
     </button>
-    <button class="option-btn" data-use="baking" onclick="selectOption('use', this)">
+    <button class="option-btn" data-use="baking">
       <span class="option-emoji">🍪</span>
       <span class="option-text">Baked Goods</span>
       <span class="option-sub">Brownies, cookies, bread</span>
     </button>
-    <button class="option-btn" data-use="capsules" onclick="selectOption('use', this)">
+    <button class="option-btn" data-use="capsules">
       <span class="option-emoji">💊</span>
       <span class="option-text">Capsules</span>
       <span class="option-sub">Precise, consistent servings</span>
     </button>
-    <button class="option-btn" data-use="topicals" onclick="selectOption('use', this)">
+    <button class="option-btn" data-use="topicals">
       <span class="option-emoji">🌿</span>
       <span class="option-text">Topicals</span>
       <span class="option-sub">Balms, massage oil</span>
@@ -277,22 +276,22 @@
 
   <div class="question-label">Your experience level?</div>
   <div class="options-grid" id="expOptions">
-    <button class="option-btn" data-exp="new" onclick="selectOption('exp', this)">
+    <button class="option-btn" data-exp="new">
       <span class="option-emoji">🌱</span>
       <span class="option-text">New to Edibles</span>
       <span class="option-sub">Just getting started</span>
     </button>
-    <button class="option-btn" data-exp="occasional" onclick="selectOption('exp', this)">
+    <button class="option-btn" data-exp="occasional">
       <span class="option-emoji">😌</span>
       <span class="option-text">Occasional</span>
       <span class="option-sub">A few times a month</span>
     </button>
-    <button class="option-btn" data-exp="regular" onclick="selectOption('exp', this)">
+    <button class="option-btn" data-exp="regular">
       <span class="option-emoji">✌️</span>
       <span class="option-text">Regular</span>
       <span class="option-sub">Weekly or more</span>
     </button>
-    <button class="option-btn" data-exp="experienced" onclick="selectOption('exp', this)">
+    <button class="option-btn" data-exp="experienced">
       <span class="option-emoji">🔥</span>
       <span class="option-text">Experienced</span>
       <span class="option-sub">Know what works for me</span>
@@ -309,14 +308,15 @@
     </div>
     <div class="result-desc" id="resultDesc"></div>
     <div class="result-tips" id="resultTips"></div>
-    <button class="reset-btn" onclick="resetWidget()">↩ Start over</button>
+    <button class="reset-btn" id="resetBtn">↩ Start over</button>
   </div>
 
-  <div class="footer-note">Estimates based on 20% THC flower · Results may vary ±25–30% · Always start with a smaller THC amount per serving</div>
+  <div class="footer-note">Estimates based on 20% THC flower &middot; Results may vary &plusmn;25&ndash;30% &middot; Always start with a smaller THC amount per serving</div>
 
 </div>
 
 <script>
+(function () {
   var selectedUse = null;
   var selectedExp = null;
 
@@ -351,12 +351,12 @@
     var groupId = type === 'use' ? 'useOptions' : 'expOptions';
     var group = document.getElementById(groupId);
     var buttons = group.querySelectorAll('.option-btn');
-    buttons.forEach(function(b) { b.classList.remove('selected'); });
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].classList.remove('selected');
+    }
     btn.classList.add('selected');
-
     if (type === 'use') selectedUse = btn.getAttribute('data-use');
     else selectedExp = btn.getAttribute('data-exp');
-
     if (selectedUse && selectedExp) showResult();
   }
 
@@ -369,26 +369,56 @@
 
     var tipsEl = document.getElementById('resultTips');
     tipsEl.innerHTML = '';
-    data.tips.forEach(function(tip) {
+    for (var i = 0; i < data.tips.length; i++) {
       var row = document.createElement('div');
       row.className = 'tip-row';
-      row.innerHTML = '<div class="tip-dot"></div><span>' + tip + '</span>';
+      var dot = document.createElement('div');
+      dot.className = 'tip-dot';
+      var span = document.createElement('span');
+      span.textContent = data.tips[i];
+      row.appendChild(dot);
+      row.appendChild(span);
       tipsEl.appendChild(row);
-    });
+    }
 
     var card = document.getElementById('resultCard');
     card.classList.add('visible');
-    setTimeout(function() {
+
+    setTimeout(function () {
       card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 100);
+    }, 50);
   }
 
   function resetWidget() {
     selectedUse = null;
     selectedExp = null;
-    document.querySelectorAll('.option-btn').forEach(function(b) { b.classList.remove('selected'); });
+    var allBtns = document.querySelectorAll('.option-btn');
+    for (var i = 0; i < allBtns.length; i++) {
+      allBtns[i].classList.remove('selected');
+    }
     document.getElementById('resultCard').classList.remove('visible');
   }
+
+  // Wire up use buttons
+  var useBtns = document.getElementById('useOptions').querySelectorAll('.option-btn');
+  for (var i = 0; i < useBtns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function () { selectOption('use', btn); });
+    })(useBtns[i]);
+  }
+
+  // Wire up exp buttons
+  var expBtns = document.getElementById('expOptions').querySelectorAll('.option-btn');
+  for (var i = 0; i < expBtns.length; i++) {
+    (function(btn) {
+      btn.addEventListener('click', function () { selectOption('exp', btn); });
+    })(expBtns[i]);
+  }
+
+  // Wire up reset
+  document.getElementById('resetBtn').addEventListener('click', resetWidget);
+
+})();
 </script>
 
 </body>
