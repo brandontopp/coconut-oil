@@ -1,47 +1,395 @@
-1 simple, interactive, responsive HTML element that will get engagement. This should be something the user can click on. Keep it simple, ensure it doesn't violate any of the rules, and make it fun and engaging. Further, do everything in-line so you don't create any external (for example, JS) dependencies. I need to be able to just copy and paste this, and it works.
-
-Mood's visual identity centers on a sophisticated forest green (
-
-#1B3A2F) and crisp white palette, punctuated by product-specific pastel accents (dusty pink, lavender, sage) that signal different effects and experiences. The typography employs a rounded, geometric sans-serif (appears to be similar to Circular or Avenir Next) in bold weights for headlines and regular weights for body copy, creating an approachable yet premium feel. Photography follows two distinct styles: lifestyle imagery features warm, golden-hour lighting with relaxed, authentic moments showcasing diverse demographics in natural settings, while product shots utilize bold, monochromatic backgrounds with soft shadows and consistent 45-degree angles. The design system emphasizes rounded corners (approximately 12px radius) on all image containers and buttons, creating visual cohesion with the soft, lowercase logo wordmark. Layout follows a strict modular grid with generous white space, card-based components, and a mobile-first responsive approach that maintains visual hierarchy through scale rather than complexity. The overall aesthetic balances cannabis culture's laid-back ethos with wellness industry sophistication, using earthy tones and organic shapes to position Mood as an accessible, trustworthy alternative to traditional pharmaceutical solutions.
-
-I need this code packaged for an iframe embed to be created on GitHub and published on Shopify. Please present HTML and JavaScript code for the interactive element with this structure:
-
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Your Interactive Element</title>
-
+<title>Cannabis Coconut Oil Ratio Finder</title>
 <style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #ffffff;
+  }
 
-margin: 0;
+  .widget {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 32px 28px 28px;
+    max-width: 560px;
+    margin: 0 auto;
+    border: 1.5px solid #e4ede9;
+  }
 
-padding: 0;
+  .widget-header {
+    text-align: center;
+    margin-bottom: 24px;
+  }
 
-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  .widget-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4CAF7D;
+    margin-bottom: 8px;
+  }
 
-}
+  .widget-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1B3A2F;
+    line-height: 1.3;
+    margin-bottom: 6px;
+  }
 
+  .widget-subtitle {
+    font-size: 14px;
+    color: #6b8c7d;
+    line-height: 1.5;
+  }
+
+  .question-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1B3A2F;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .option-btn {
+    background: #f5f9f7;
+    border: 2px solid #e4ede9;
+    border-radius: 12px;
+    padding: 14px 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.18s ease;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .option-btn:hover {
+    border-color: #4CAF7D;
+    background: #edf7f2;
+  }
+
+  .option-btn.selected {
+    border-color: #1B3A2F;
+    background: #1B3A2F;
+  }
+
+  .option-btn.selected .option-emoji { filter: none; }
+  .option-btn.selected .option-text { color: #ffffff; }
+  .option-btn.selected .option-sub  { color: #a8c5b5; }
+
+  .option-emoji {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .option-text {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1B3A2F;
+    display: block;
+    line-height: 1.2;
+  }
+
+  .option-sub {
+    font-size: 11px;
+    color: #6b8c7d;
+    display: block;
+    margin-top: 3px;
+  }
+
+  .divider {
+    height: 1px;
+    background: #e4ede9;
+    margin: 4px 0 20px;
+  }
+
+  .result-card {
+    background: #1B3A2F;
+    border-radius: 14px;
+    padding: 22px 20px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    min-height: 0;
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  .result-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    max-height: 400px;
+  }
+
+  .result-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .result-badge {
+    background: #4CAF7D;
+    color: #1B3A2F;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .result-ratio {
+    font-size: 26px;
+    font-weight: 800;
+    color: #ffffff;
+  }
+
+  .result-mg {
+    font-size: 13px;
+    color: #7ED4A8;
+    font-weight: 600;
+    margin-top: 1px;
+  }
+
+  .result-desc {
+    font-size: 14px;
+    color: #c8ddd5;
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .result-tips {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .tip-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    color: #a8c5b5;
+    line-height: 1.4;
+  }
+
+  .tip-dot {
+    width: 6px;
+    height: 6px;
+    background: #4CAF7D;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .reset-btn {
+    display: block;
+    width: 100%;
+    margin-top: 14px;
+    background: transparent;
+    border: 1.5px solid #2D5A45;
+    border-radius: 10px;
+    padding: 10px;
+    color: #7ED4A8;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .reset-btn:hover {
+    background: #162E25;
+    border-color: #4CAF7D;
+  }
+
+  .footer-note {
+    font-size: 11px;
+    color: #a0b8ac;
+    text-align: center;
+    margin-top: 16px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 400px) {
+    .widget { padding: 24px 16px 20px; }
+    .widget-title { font-size: 19px; }
+    .options-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .result-ratio { font-size: 22px; }
+  }
 </style>
-
 </head>
-
 <body>
 
-<!-- PASTE YOUR HTML CODE HERE [SHARE INITIAL INTERACTIVE CODE WITH CLAUDE, AND ASK TO GENERATE HTML CODE FOR IFRAME/GITHUB EMBED] -->
+<div class="widget">
 
-<script> // PASTE YOUR JAVASCRIPT CODE HERE [SHARE INITIAL INTERACTIVE CODE WITH CLAUDE, AND ASK TO GENERATE HTML CODE FOR IFRAME/GITHUB EMBED]
+  <div class="widget-header">
+    <div class="widget-eyebrow">Quick Tool</div>
+    <div class="widget-title">Find Your Ideal Batch Strength</div>
+    <div class="widget-subtitle">Tell us what you're making and we'll recommend the right cannabis-to-oil ratio.</div>
+  </div>
 
+  <div class="question-label">What are you making?</div>
+  <div class="options-grid" id="useOptions">
+    <button class="option-btn" data-use="everyday" onclick="selectOption('use', this)">
+      <span class="option-emoji">🥄</span>
+      <span class="option-text">Everyday Cooking</span>
+      <span class="option-sub">Sauces, smoothies, toast</span>
+    </button>
+    <button class="option-btn" data-use="baking" onclick="selectOption('use', this)">
+      <span class="option-emoji">🍪</span>
+      <span class="option-text">Baked Goods</span>
+      <span class="option-sub">Brownies, cookies, bread</span>
+    </button>
+    <button class="option-btn" data-use="capsules" onclick="selectOption('use', this)">
+      <span class="option-emoji">💊</span>
+      <span class="option-text">Capsules</span>
+      <span class="option-sub">Precise, consistent servings</span>
+    </button>
+    <button class="option-btn" data-use="topicals" onclick="selectOption('use', this)">
+      <span class="option-emoji">🌿</span>
+      <span class="option-text">Topicals</span>
+      <span class="option-sub">Balms, massage oil</span>
+    </button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="question-label">Your experience level?</div>
+  <div class="options-grid" id="expOptions">
+    <button class="option-btn" data-exp="new" onclick="selectOption('exp', this)">
+      <span class="option-emoji">🌱</span>
+      <span class="option-text">New to Edibles</span>
+      <span class="option-sub">Just getting started</span>
+    </button>
+    <button class="option-btn" data-exp="occasional" onclick="selectOption('exp', this)">
+      <span class="option-emoji">😌</span>
+      <span class="option-text">Occasional</span>
+      <span class="option-sub">A few times a month</span>
+    </button>
+    <button class="option-btn" data-exp="regular" onclick="selectOption('exp', this)">
+      <span class="option-emoji">✌️</span>
+      <span class="option-text">Regular</span>
+      <span class="option-sub">Weekly or more</span>
+    </button>
+    <button class="option-btn" data-exp="experienced" onclick="selectOption('exp', this)">
+      <span class="option-emoji">🔥</span>
+      <span class="option-text">Experienced</span>
+      <span class="option-sub">Know what works for me</span>
+    </button>
+  </div>
+
+  <div class="result-card" id="resultCard">
+    <div class="result-top">
+      <div>
+        <div class="result-ratio" id="resultRatio"></div>
+        <div class="result-mg" id="resultMg"></div>
+      </div>
+      <div class="result-badge" id="resultBadge"></div>
+    </div>
+    <div class="result-desc" id="resultDesc"></div>
+    <div class="result-tips" id="resultTips"></div>
+    <button class="reset-btn" onclick="resetWidget()">↩ Start over</button>
+  </div>
+
+  <div class="footer-note">Estimates based on 20% THC flower · Results may vary ±25–30% · Always start with a smaller THC amount per serving</div>
+
+</div>
+
+<script>
+  var selectedUse = null;
+  var selectedExp = null;
+
+  var results = {
+    everyday: {
+      new:        { ratio: "1g per cup",   mg: "~8.5mg / tbsp",  badge: "Mild",        desc: "A great starting point for daily cooking. The low THC amount per serving makes it easy to work into meals without worrying about overdoing it.", tips: ["Stir into oatmeal or blend into smoothies", "Easy to adjust serving size up or down", "Perfect for building consistency over time"] },
+      occasional: { ratio: "1g per cup",   mg: "~8.5mg / tbsp",  badge: "Mild",        desc: "For casual everyday use, a mild batch keeps things relaxed and predictable across different recipes.", tips: ["Works well in salad dressings and sauces", "Swaps cleanly for regular coconut oil", "Low commitment — easy to use a little or a lot"] },
+      regular:    { ratio: "3.5g per cup", mg: "~30mg / tbsp",   badge: "Moderate",    desc: "A moderate batch works well for everyday cooking when you have a clear sense of your preferred THC amount per serving.", tips: ["Ideal for stir-fries, grain bowls, and warm dishes", "Measure each serving consistently for best results", "Great for making a weekly batch"] },
+      experienced:{ ratio: "3.5g per cup", mg: "~30mg / tbsp",   badge: "Moderate",    desc: "At moderate strength, this ratio gives you enough flexibility to cook freely while keeping THC amounts manageable per serving.", tips: ["Versatile enough for both sweet and savory recipes", "Consider keeping a milder batch alongside for guests", "Pairs well with higher-fat meals for consistent results"] }
+    },
+    baking: {
+      new:        { ratio: "1g per cup",   mg: "~8.5mg / tbsp",  badge: "Mild",        desc: "Baked goods are easy to overdo, especially if they taste great. Starting mild lets you find your footing before committing to a stronger batch.", tips: ["Stick to recipes with clear serving sizes", "Cut brownies and cookies into smaller pieces", "Wait at least 90 minutes before having more"] },
+      occasional: { ratio: "3.5g per cup", mg: "~30mg / tbsp",   badge: "Moderate",    desc: "A moderate batch is well-suited to baking — strong enough to feel the difference in a standard serving, without going overboard.", tips: ["Use the same amount of oil your recipe calls for", "Keep oven temp at or below 350°F", "Label everything clearly before storing"] },
+      regular:    { ratio: "3.5g per cup", mg: "~30mg / tbsp",   badge: "Moderate",    desc: "For regular bakers, 3.5g per cup produces reliable results across cookies, banana bread, and muffins without being unpredictable.", tips: ["Weigh ingredients for consistent servings", "Cool baked goods completely before cutting", "Store in an airtight container for up to 1 week"] },
+      experienced:{ ratio: "7g per cup",   mg: "~60mg / tbsp",   badge: "Strong",      desc: "A strong batch works for experienced consumers who know their preferred THC amount and want a potent effect from a smaller serving.", tips: ["Bake in smaller portion sizes to control each serving", "Keep a written note of your recipe and ratio", "Not recommended for sharing without clearly labeling"] }
+    },
+    capsules: {
+      new:        { ratio: "1g per cup",   mg: "~8.5mg / tbsp",  badge: "Mild",        desc: "Capsules make it easy to take a consistent THC amount, but starting mild gives you room to adjust without committing to a stronger batch first.", tips: ["Fill capsules while the oil is still slightly warm", "Start with one capsule and wait 2 hours", "Store filled capsules in the refrigerator"] },
+      occasional: { ratio: "3.5g per cup", mg: "~30mg / tbsp",   badge: "Moderate",    desc: "For occasional capsule use, a moderate batch gives you meaningful potency in a tidy, measured format.", tips: ["Use a small syringe for consistent fills", "Label capsules with batch date and strength", "Take with food for more consistent results"] },
+      regular:    { ratio: "7g per cup",   mg: "~60mg / tbsp",   badge: "Strong",      desc: "Regular capsule users often prefer a stronger batch so they can take a smaller capsule volume to reach their preferred THC amount.", tips: ["Precision matters — weigh your oil before filling", "Consider a double infusion for even higher potency", "Keep a log of each batch to track consistency"] },
+      experienced:{ ratio: "14g per cup",  mg: "~119mg / tbsp",  badge: "Very Strong", desc: "A concentrated batch is ideal for experienced consumers making capsules — you can dilute to your exact preferred strength or fill smaller capsules.", tips: ["Always dilute to your target THC amount before filling", "This ratio works well blended with uninfused coconut oil", "Store in a dark, cool place to preserve potency"] }
+    },
+    topicals: {
+      new:        { ratio: "3.5g per cup", mg: "~30mg / tbsp",   badge: "Moderate",    desc: "For topicals, THC amount matters less than consistency and coverage. A moderate batch gives you a solid base without wasting flower.", tips: ["Mix with beeswax for a firmer balm texture", "Apply directly to skin and massage in gently", "Topicals deliver cannabinoids locally, not through digestion"] },
+      occasional: { ratio: "3.5g per cup", mg: "~30mg / tbsp",   badge: "Moderate",    desc: "A moderate batch is a reliable base for a simple homemade topical that you can use as often as you like.", tips: ["Add a few drops of lavender or peppermint oil for scent", "Store finished balm in a cool, dark place", "A little goes a long way — start with a small amount"] },
+      regular:    { ratio: "7g per cup",   mg: "~60mg / tbsp",   badge: "Strong",      desc: "Regular topical users often prefer a stronger oil base so a smaller amount goes further per application.", tips: ["Works well as a standalone massage oil", "Combine with shea butter for a richer texture", "Can be layered with other topical ingredients safely"] },
+      experienced:{ ratio: "14g per cup",  mg: "~119mg / tbsp",  badge: "Very Strong", desc: "A concentrated oil base is perfect for formulating your own topicals — dilute to your preferred strength or use as-is for a potent application.", tips: ["Blend with uninfused coconut oil to stretch the batch", "Excellent base for a high-potency body balm", "Label clearly and store away from heat and light"] }
+    }
+  };
+
+  function selectOption(type, btn) {
+    var groupId = type === 'use' ? 'useOptions' : 'expOptions';
+    var group = document.getElementById(groupId);
+    var buttons = group.querySelectorAll('.option-btn');
+    buttons.forEach(function(b) { b.classList.remove('selected'); });
+    btn.classList.add('selected');
+
+    if (type === 'use') selectedUse = btn.getAttribute('data-use');
+    else selectedExp = btn.getAttribute('data-exp');
+
+    if (selectedUse && selectedExp) showResult();
+  }
+
+  function showResult() {
+    var data = results[selectedUse][selectedExp];
+    document.getElementById('resultRatio').textContent = data.ratio;
+    document.getElementById('resultMg').textContent = data.mg + ' per tablespoon';
+    document.getElementById('resultBadge').textContent = data.badge;
+    document.getElementById('resultDesc').textContent = data.desc;
+
+    var tipsEl = document.getElementById('resultTips');
+    tipsEl.innerHTML = '';
+    data.tips.forEach(function(tip) {
+      var row = document.createElement('div');
+      row.className = 'tip-row';
+      row.innerHTML = '<div class="tip-dot"></div><span>' + tip + '</span>';
+      tipsEl.appendChild(row);
+    });
+
+    var card = document.getElementById('resultCard');
+    card.classList.add('visible');
+    setTimeout(function() {
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  }
+
+  function resetWidget() {
+    selectedUse = null;
+    selectedExp = null;
+    document.querySelectorAll('.option-btn').forEach(function(b) { b.classList.remove('selected'); });
+    document.getElementById('resultCard').classList.remove('visible');
+  }
 </script>
 
 </body>
-
 </html>
